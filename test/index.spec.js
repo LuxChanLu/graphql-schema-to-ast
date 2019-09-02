@@ -13,25 +13,29 @@ describe('schema to ast', () => {
   const operation = op => OmitDeep(parse(op), 'loc')
 
   it('should find basic query', () => {
-    expect(operation('query { simpleQuery }')).toEqual(resolver.query('simpleQuery'))
-    expect(operation('query { simpleQueryMandatory }')).toEqual(resolver.query('simpleQueryMandatory'))
-    expect(operation('query { arrayQueryMandatory }')).toEqual(resolver.query('arrayQueryMandatory'))
-    expect(operation('query ($param1: Int!, $param2: [Float]) { withParams(param1: $param1, param2: $param2) }')).toEqual(resolver.query('withParams'))
+    expect(resolver.query('simpleQuery')).toEqual(operation('query { simpleQuery }'))
+    expect(resolver.query('simpleQueryMandatory')).toEqual(operation('query { simpleQueryMandatory }'))
+    expect(resolver.query('arrayQueryMandatory')).toEqual(operation('query { arrayQueryMandatory }'))
+    expect(resolver.query('withParams')).toEqual(operation('query ($param1: Int!, $param2: [Float]) { withParams(param1: $param1, param2: $param2) }'))
+  })
+
+  it('should not find query', () => {
+    expect(resolver.query('nonExistingQuery')).toBeUndefined()
   })
 
   it('should find advanced query', () => {
-    expect(operation('query { simpleQuery } query { simpleQueryMandatory }')).toEqual(resolver.query('simpleQuery', 'simpleQueryMandatory'))
-    expect(operation('query { simpleQuery simpleQueryMandatory }')).toEqual(resolver.query(['simpleQuery', 'simpleQueryMandatory']))
+    expect(resolver.query('simpleQuery', 'simpleQueryMandatory')).toEqual(operation('query { simpleQuery } query { simpleQueryMandatory }'))
+    expect(resolver.query(['simpleQuery', 'simpleQueryMandatory'])).toEqual(operation('query { simpleQuery simpleQueryMandatory }'))
 
-    expect(operation('query ($param1: Int!, $param2: [Float]) { withParams(param1: $param1, param2: $param2) } query ($param1: Int!, $param2: [Float]) { withParams(param1: $param1, param2: $param2) }')).toEqual(resolver.query('withParams', 'withParams'))
-    expect(operation('query ($param1: Int!, $param2: [Float]) { simpleQuery withParams(param1: $param1, param2: $param2) }')).toEqual(resolver.query(['simpleQuery', 'withParams']))
+    expect(resolver.query('withParams', 'withParams')).toEqual(operation('query ($param1: Int!, $param2: [Float]) { withParams(param1: $param1, param2: $param2) } query ($param1: Int!, $param2: [Float]) { withParams(param1: $param1, param2: $param2) }'))
+    expect(resolver.query(['simpleQuery', 'withParams'])).toEqual(operation('query ($param1: Int!, $param2: [Float]) { simpleQuery withParams(param1: $param1, param2: $param2) }'))
   })
 
   it('should find basic mutation', () => {
-    expect(operation(`mutation ($params: InputType!) { doSomething(params: $params) ${OutputType} }`)).toEqual(resolver.mutation('doSomething'))
+    expect(resolver.mutation('doSomething')).toEqual(operation(`mutation ($params: InputType!) { doSomething(params: $params) ${OutputType} }`))
   })
 
   it('should find basic subscription', () => {
-    expect(operation('subscription { subscribeToSomething }')).toEqual(resolver.subscription('subscribeToSomething'))
+    expect(resolver.subscription('subscribeToSomething')).toEqual(operation('subscription { subscribeToSomething }'))
   })
 })

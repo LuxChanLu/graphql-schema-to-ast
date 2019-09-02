@@ -22,10 +22,7 @@ class ASTGenerator {
     }
   }
   document(definitions) {
-    return {
-      kind: Kind.DOCUMENT,
-      definitions
-    }
+    return definitions.length > 0 ? { kind: Kind.DOCUMENT, definitions } : undefined
   }
   operation(operation, type) {
     type = !Array.isArray(type) ? [type] : type
