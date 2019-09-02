@@ -1,16 +1,16 @@
-const OmitDeep = require('omit-deep')
 const { join } = require('path')
 const { readFileSync } = require('fs')
-const { buildSchema } = require('graphql/utilities')
+const DeepDelete = require('deep-delete')
 const { parse } = require('graphql')
-const { fromSchema, fromIntrospection } = require('../index.js')
+const { buildSchema } = require('graphql/utilities')
+const { fromSchema } = require('../index.js')
 
 const schema = buildSchema(readFileSync(join(__dirname, '__fixture__', 'schema.gql')).toString())
 const OutputType = '{ value string subtype { value float subsub { end } } }'
 
 describe('schema to ast', () => {
   const resolver = fromSchema(schema)
-  const operation = op => OmitDeep(parse(op), 'loc')
+  const operation = op => DeepDelete('loc', parse(op))
 
   it('should find basic query', () => {
     expect(resolver.query('simpleQuery')).toEqual(operation('query { simpleQuery }'))

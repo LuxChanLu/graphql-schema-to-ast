@@ -29,7 +29,7 @@ class ASTGenerator {
     return {
       kind: Kind.OPERATION_DEFINITION,
       directives: [],
-      name: {},
+      name: undefined,
       operation,
       variableDefinitions: type.reduce((acc, { args }) => [...acc, ...args], []).map(arg => this.variableDefinition(arg)),
       selectionSet: this.selectionSet(type)
@@ -38,7 +38,7 @@ class ASTGenerator {
   variableDefinition(arg) {
     return {
       kind: Kind.VARIABLE_DEFINITION,
-      defaultValue: {},
+      defaultValue: undefined,
       directives: [],
       type: this.type(arg.type),
       variable: this.variable(arg)
@@ -65,10 +65,10 @@ class ASTGenerator {
       return this.field(type)
     })
   }
-  field(type, selectionSet = {}) {
+  field(type, selectionSet = undefined) {
     return {
       kind: Kind.FIELD,
-      alias: {},
+      alias: undefined,
       directives: [],
       arguments: (type.args || []).map(arg => this.argument(arg)),
       name: this.name(type),
