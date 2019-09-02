@@ -9,6 +9,7 @@ class ASTGenerator {
   // ==================================
   // AST node mapping
   // ==================================
+
   type(type) {
     if (type instanceof GraphQLNonNull || type instanceof GraphQLList) {
       return {
@@ -24,15 +25,15 @@ class ASTGenerator {
   document(definitions) {
     return definitions.length > 0 ? { kind: Kind.DOCUMENT, definitions } : undefined
   }
-  operation(operation, type) {
-    type = !Array.isArray(type) ? [type] : type
+  operation(operation, types) {
+    types = !Array.isArray(types) ? [types] : types
     return {
       kind: Kind.OPERATION_DEFINITION,
       directives: [],
       name: undefined,
       operation,
-      variableDefinitions: type.reduce((acc, { args }) => [...acc, ...args], []).map(arg => this.variableDefinition(arg)),
-      selectionSet: this.selectionSet(type)
+      variableDefinitions: types.filter(type => type !== undefined).reduce((acc, { args }) => [...acc, ...args], []).map(arg => this.variableDefinition(arg)),
+      selectionSet: this.selectionSet(types)
     }
   }
   variableDefinition(arg) {
@@ -57,7 +58,7 @@ class ASTGenerator {
     }
   }
   selections(types) {
-    return types.map(type => {
+    return types.filter(type => type !== undefined).map(type => {
       const namedType = getNamedType(type.type)
       if (namedType instanceof GraphQLObjectType || namedType instanceof GraphQLInputObjectType) {
         return this.field(type, this.selectionSet(Object.values(namedType.getFields())))
@@ -96,10 +97,14 @@ class ASTGenerator {
 
   resolve(type, names) {
     const { _queryType, _mutationType, _subscriptionType } = this.schema
-    const mainTypes = { query: _queryType, mutation: _mutationType, subscription: _subscriptionType }
-    return this.document(names.map(name => Array.isArray(name) ? name.map(name => mainTypes[type].getFields()[name]) : mainTypes[type].getFields()[name])
-      .filter(operation => operation !== undefined)
-      .map(operation => this.operation(type, operation)))
+    const mainType = { query: _queryType, mutation: _mutationType, subscription: _subscriptionType }[type]
+    if (mainType) {
+      const fields = mainType.getFields()
+      const operationUndefinedFilter = operation => operation !== undefined && (Array.isArray(operation) ? operation.length > 0 : true)
+      return this.document(names.map(name => Array.isArray(name) ? name.map(name => fields[name]).filter(operationUndefinedFilter) : fields[name])
+        .filter(operationUndefinedFilter)
+        .map(operation => this.operation(type, operation)))
+    }
   }
 
   query(...names) {

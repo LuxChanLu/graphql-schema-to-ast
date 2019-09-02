@@ -35,7 +35,8 @@ describe('schema to ast', () => {
     expect(resolver.mutation('doSomething')).toEqual(operation(`mutation ($params: InputType!) { doSomething(params: $params) ${OutputType} }`))
   })
 
-  it('should find basic subscription', () => {
-    expect(resolver.subscription('subscribeToSomething')).toEqual(operation('subscription { subscribeToSomething }'))
+  it('should not find basic subscription', () => {
+    expect(resolver.subscription('subscribeToSomething')).toBeUndefined()
+    expect(resolver.subscription(['subscribeToSomething'])).toBeUndefined()
   })
 })

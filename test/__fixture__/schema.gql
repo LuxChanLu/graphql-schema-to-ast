@@ -10,10 +10,6 @@ type Mutation {
   doSomething(params: InputType!): OutputType!
 }
 
-type Subscription {
-  subscribeToSomething: [Values]
-}
-
 enum Values { A, B, C }
 
 # ============================
