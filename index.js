@@ -99,8 +99,8 @@ class ASTGenerator {
 
   resolve(type, names) {
     const { _queryType, _mutationType, _subscriptionType } = this.schema
-    const mainTypes = { query: _queryType.getFields(), mutation: _mutationType.getFields(), subscription: _subscriptionType.getFields() }
-    return this.document(names.map(name => Array.isArray(name) ? name.map(name => mainTypes[type][name]) : mainTypes[type][name])
+    const mainTypes = { query: _queryType, mutation: _mutationType, subscription: _subscriptionType }
+    return this.document(names.map(name => Array.isArray(name) ? name.map(name => mainTypes[type].getFields()[name]) : mainTypes[type].getFields()[name])
       .filter(operation => operation !== undefined)
       .map(operation => this.operation(type, operation)))
   }
