@@ -1,0 +1,47 @@
+{
+  "name": "graphql-schema-to-ast",
+  "version": "0.1.0",
+  "description": "Graphql schema ast resolver",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "ci": "jest --watch",
+    "test": "jest --coverage",
+    "lint": "eslint --ext=.js test index.js",
+    "coverall": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YourSoftRun/graphql-schema-to-ast.git"
+  },
+  "author": "Hugo Meyronneinc <hugo@yoursoft.run>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YourSoftRun/graphql-schema-to-ast/issues"
+  },
+  "engines": {
+    "node": ">= 8.x.x"
+  },
+  "homepage": "https://github.com/YourSoftRun/graphql-schema-to-ast#readme",
+  "peerDependencies": {
+    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "coveralls": "^3.0.6",
+    "eslint": "^6.3.0",
+    "eslint-plugin-jest": "^22.16.0",
+    "graphql": "^14.5.4",
+    "jest": "^24.9.0",
+    "jest-cli": "^24.9.0",
+    "omit-deep": "^0.3.0"
+  }
+}

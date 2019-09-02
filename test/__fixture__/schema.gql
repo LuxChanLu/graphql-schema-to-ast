@@ -1,0 +1,58 @@
+type Query {
+  simpleQuery: Int
+  simpleQueryMandatory: Int!
+  arrayQueryMandatory: [Int!]
+
+  withParams(param1: Int!, param2: [Float]): Int
+}
+
+type Mutation {
+  doSomething(params: InputType!): OutputType!
+}
+
+type Subscription {
+  subscribeToSomething: [Values]
+}
+
+enum Values { A, B, C }
+
+# ============================
+# Output
+# ============================
+
+type OutputType {
+  value: Values!
+  string: String
+  subtype: [InputSubType!]
+}
+
+type OutputSubType {
+  value: Values!
+  float: [Float]!
+  subsub: OutputSubSubType
+}
+
+type OutputSubSubType {
+  end: String!
+}
+
+
+# ============================
+# Input
+# ============================
+
+input InputType {
+  value: Values!
+  string: String
+  subtype: [InputSubType!]
+}
+
+input InputSubType {
+  value: Values!
+  float: [Float]!
+  subsub: InputSubSubType
+}
+
+input InputSubSubType {
+  end: String!
+}
