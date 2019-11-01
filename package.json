@@ -35,11 +35,11 @@
     ]
   },
   "devDependencies": {
-    "@types/jest": "^24.0.18",
-    "coveralls": "^3.0.6",
-    "eslint": "^6.3.0",
-    "eslint-plugin-jest": "^22.16.0",
-    "graphql": "^14.5.4",
+    "@types/jest": "^24.0.21",
+    "coveralls": "^3.0.7",
+    "eslint": "^6.6.0",
+    "eslint-plugin-jest": "^23.0.2",
+    "graphql": "^14.5.8",
     "jest": "^24.9.0",
     "jest-cli": "^24.9.0",
     "deep-delete": "^2.1.1"

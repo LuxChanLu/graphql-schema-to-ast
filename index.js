@@ -1,5 +1,4 @@
-const { buildClientSchema } = require('graphql/utilities')
-const { getNamedType, Kind, GraphQLNonNull, GraphQLList, GraphQLObjectType, GraphQLInputObjectType } = require('graphql')
+const { getNamedType, Kind, GraphQLNonNull, GraphQLList, GraphQLObjectType, GraphQLInputObjectType, buildClientSchema } = require('graphql')
 
 class ASTGenerator {
   constructor(schema) {
