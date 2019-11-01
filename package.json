@@ -1,6 +1,6 @@
 {
   "name": "graphql-schema-to-ast",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Graphql schema ast resolver",
   "main": "index.js",
   "directories": {
