@@ -1,8 +1,22 @@
-const { getNamedType, Kind, GraphQLNonNull, GraphQLList, GraphQLObjectType, GraphQLInputObjectType, buildClientSchema } = require('graphql')
+const { TypeKind, Kind, graphqlSync, getIntrospectionQuery } = require('graphql')
+
+const search = (arr, name) => (arr.find(item => (item.name === name)))
 
 class ASTGenerator {
-  constructor(schema) {
-    this.schema = schema
+  constructor(introspection) {
+    this._introspection = introspection
+  }
+
+  introspectType(name) {
+    return search(this._introspection.__schema.types, name)
+  }
+
+  isWrappingType(type) {
+    return [TypeKind.LIST, TypeKind.NON_NULL].indexOf(type.kind) !== -1
+  }
+
+  namedType(type) {
+    return this.isWrappingType(type) ? this.namedType(type.ofType) : type
   }
 
   // ==================================
@@ -10,9 +24,9 @@ class ASTGenerator {
   // ==================================
 
   type(type) {
-    if (type instanceof GraphQLNonNull || type instanceof GraphQLList) {
+    if (this.isWrappingType(type)) {
       return {
-        kind: type instanceof GraphQLNonNull ? Kind.NON_NULL_TYPE : Kind.LIST_TYPE,
+        kind: type.kind === TypeKind.NON_NULL ? Kind.NON_NULL_TYPE : Kind.LIST_TYPE,
         type: this.type(type.ofType)
       }
     }
@@ -58,9 +72,9 @@ class ASTGenerator {
   }
   selections(types) {
     return types.filter(type => type !== undefined).map(type => {
-      const namedType = getNamedType(type.type)
-      if (namedType instanceof GraphQLObjectType || namedType instanceof GraphQLInputObjectType) {
-        return this.field(type, this.selectionSet(Object.values(namedType.getFields())))
+      const namedType = this.namedType(type.type)
+      if ([TypeKind.OBJECT, TypeKind.INPUT_OBJECT].indexOf(namedType.kind) !== -1) {
+        return this.field(type, this.selectionSet(this.introspectType(namedType.name).fields))
       }
       return this.field(type)
     })
@@ -70,7 +84,7 @@ class ASTGenerator {
       kind: Kind.FIELD,
       alias: undefined,
       directives: [],
-      arguments: (type.args || []).map(arg => this.argument(arg)),
+      arguments: type.args.map(arg => this.argument(arg)),
       name: this.name(type),
       selectionSet
     }
@@ -95,12 +109,12 @@ class ASTGenerator {
   // ==================================
 
   resolve(type, names) {
-    const { _queryType, _mutationType, _subscriptionType } = this.schema
-    const mainType = { query: _queryType, mutation: _mutationType, subscription: _subscriptionType }[type]
+    const { queryType, mutationType, subscriptionType } = this._introspection.__schema
+    const mainType = { query: queryType.name, mutation: (mutationType || {}).name, subscription: (subscriptionType || {}).name }[type]
     if (mainType) {
-      const fields = mainType.getFields()
+      const { fields } = this.introspectType(mainType)
       const operationUndefinedFilter = operation => operation !== undefined && (Array.isArray(operation) ? operation.length > 0 : true)
-      return this.document(names.map(name => Array.isArray(name) ? name.map(name => fields[name]).filter(operationUndefinedFilter) : fields[name])
+      return this.document(names.map(name => Array.isArray(name) ? name.map(name => search(fields, name)).filter(operationUndefinedFilter) : search(fields, name))
         .filter(operationUndefinedFilter)
         .map(operation => this.operation(type, operation)))
     }
@@ -118,7 +132,6 @@ class ASTGenerator {
 }
 
 module.exports = {
-  fromIntrospection: /* istanbul ignore next */  (introspection, options) => module.exports.fromSchema(buildClientSchema(introspection, options)),
-  fromSchema: schema => new ASTGenerator(schema)
+  fromIntrospection: introspection => new ASTGenerator(introspection),
+  fromSchema: schema => module.exports.fromIntrospection(graphqlSync(schema, getIntrospectionQuery({ descriptions: false })).data)
 }
-
