@@ -1,6 +1,6 @@
 # graphql-schema-to-ast
 
-<!-- [![Build Status](https://travis-ci.org/LuxChanLu/graphql-schema-to-ast.svg?branch=master)](https://travis-ci.org/LuxChanLu/graphql-schema-to-ast) -->
+[![Build](https://github.com/LuxChanLu/graphql-schema-to-ast/actions/workflows/build.yaml/badge.svg)](https://github.com/LuxChanLu/graphql-schema-to-ast/actions/workflows/build.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/LuxChanLu/graphql-schema-to-ast/badge.svg?branch=master)](https://coveralls.io/github/LuxChanLu/graphql-schema-to-ast?branch=master)
 [![Downloads](https://img.shields.io/npm/dm/graphql-schema-to-ast.svg)](https://www.npmjs.com/package/graphql-schema-to-ast)
 
