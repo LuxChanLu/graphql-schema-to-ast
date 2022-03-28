@@ -9,22 +9,21 @@
   "scripts": {
     "ci": "jest --watch",
     "test": "jest --coverage",
-    "lint": "eslint --ext=.js test index.js",
-    "coverall": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "lint": "eslint --ext=.js test index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YourSoftRun/graphql-schema-to-ast.git"
+    "url": "git+https://github.com/LuxChanLu/graphql-schema-to-ast.git"
   },
-  "author": "Hugo Meyronneinc <hugo@yoursoft.run>",
+  "author": "Hugo Meyronneinc <hugo@lxc.lu>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/YourSoftRun/graphql-schema-to-ast/issues"
+    "url": "https://github.com/LuxChanLu/graphql-schema-to-ast/issues"
   },
   "engines": {
     "node": ">= 8.x.x"
   },
-  "homepage": "https://github.com/YourSoftRun/graphql-schema-to-ast#readme",
+  "homepage": "https://github.com/LuxChanLu/graphql-schema-to-ast#readme",
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
   },
@@ -35,13 +34,12 @@
     ]
   },
   "devDependencies": {
-    "@types/jest": "^24.0.23",
-    "coveralls": "^3.0.7",
-    "eslint": "^6.6.0",
-    "eslint-plugin-jest": "^23.0.4",
-    "graphql": "^14.5.8",
-    "jest": "^24.9.0",
-    "jest-cli": "^24.9.0",
+    "@types/jest": "^27.4.1",
+    "eslint": "^8.12.0",
+    "eslint-plugin-jest": "^26.1.3",
+    "graphql": "^16.3.0",
+    "jest": "^27.5.1",
+    "jest-cli": "^27.5.1",
     "deep-delete": "^2.1.1"
   }
 }

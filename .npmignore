@@ -1,9 +1,8 @@
 .codeclimate.yml
 .editorconfig
 .eslintrc.js
-.travis.yml
+.github/
 test/
-*.spec.js
 
 .vs
 *~
